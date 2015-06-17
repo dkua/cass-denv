@@ -1,0 +1,72 @@
+---
+- hosts: all
+  sudo: true
+  pre_tasks:
+    - name: add java8 repo
+      apt_repository: repo='ppa:webupd8team/java' state=present
+    - name: update apt cache
+      apt: update_cache=yes
+    - name: install build-essential
+      apt: pkg='build-essential' state=latest
+  roles:
+    - git
+  tasks:
+    - name: update bash
+      apt: pkg={{ item }} state=latest
+      with_items:
+        - bash
+        - bash-completion
+    - name: install zsh
+      apt: pkg={{ item }} state=latest
+      with_items:
+        - zsh
+    - name: install hg
+      apt: pkg={{ item }} state=latest
+      with_items:
+        - mercurial
+    - name: install python
+      apt: pkg={{ item }} state=latest
+      with_items:
+          - python-pip
+          - python-dev
+    - name: install virtualenvwrapper
+      pip: name=virtualenvwrapper
+    - name: install vim
+      apt: pkg={{ item }} state=latest
+      with_items:
+        - vim
+    - name: pre-accept oracle java8 license
+      shell: echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+    - name: install java8
+      apt: pkg={{ item }} state=latest
+      with_items:
+        - oracle-java8-installer
+        - oracle-java8-set-default
+    - name: install ant
+      apt: pkg={{ item }} state=latest
+      with_items:
+        - ant
+        - ant-optional
+    - name: clone dotfiles
+      git: repo=https://github.com/dkua/dotfiles.git dest=/home/vagrant/dotfiles
+      sudo: false
+    - name: copy VM profile
+      copy: src=vm_profile dest=/home/vagrant/.vm_profile owner=vagrant group=vagrant mode=0644
+    - name: copy requirements.txt
+      copy: src=requirements.txt dest=/home/vagrant/requirements.txt owner=vagrant group=vagrant mode=0644
+    - name: pip install requirements
+      pip: requirements=/home/vagrant/requirements.txt
+    - name: clone ccm
+      git: repo=https://github.com/pcmanus/ccm.git dest=/home/vagrant/ccm
+      sudo: false
+    - name: install ccm
+      shell: cd /home/vagrant/ccm; ./setup.py install
+    - name: clone cassandra
+      git: repo=https://github.com/dkua/cassandra.git dest=/home/vagrant/cassandra
+      sudo: false
+    - name: build cassandra
+      shell: cd /home/vagrant/cassandra; ant build jar
+      sudo: false
+    - name: clone cassandra-dtest
+      git: repo=https://github.com/riptano/cassandra-dtest.git dest=/home/vagrant/cassandra-dtest
+      sudo: false

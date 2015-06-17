@@ -1,0 +1,2 @@
+export CASSANDRA_DIR="$HOME/cassandra"
+alias "cassbuild"="cd $CASSANDRA_DIR; ant build jar; cd -"
