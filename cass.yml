@@ -31,8 +31,11 @@
       with_items:
           - python-pip
           - python-dev
-          - python2.6
           - python2.6-dev
+          - python3-dev
+          - python3.2-dev
+          - python3.3-dev
+          - python3.4-dev
     - name: install virtualenvwrapper
       pip: name=virtualenvwrapper
     - name: install vim
@@ -76,4 +79,21 @@
       sudo: false
     - name: clone python-driver
       git: repo=https://github.com/dkua/python-driver.git dest=/home/vagrant/python-driver
+      sudo: false
+    - name: make virtualenvs
+      shell: >
+          executable=/bin/bash
+          source `which virtualenvwrapper.sh` && mkvirtualenv -p {{ item.python }} {{ item.venv }}
+      with_items:
+          - { python: 'python2.6', venv: 'cass2.6' }
+          - { python: 'python', venv: 'cass2.7' }
+          - { python: 'python3', venv: 'cass3.0' }
+          - { python: 'python3.2', venv: 'cass3.2' }
+          - { python: 'python3.3', venv: 'cass3.3' }
+          - { python: 'python3.4', venv: 'cass3.4' }
+      sudo: false
+    - name: pip install requirements
+      shell: >
+          executable=/bin/bash
+          source `which virtualenvwrapper.sh` && allvirtualenv pip install -r /home/vagrant/requirements.txt
       sudo: false
