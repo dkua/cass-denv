@@ -4,6 +4,8 @@
   pre_tasks:
     - name: add java8 repo
       apt_repository: repo='ppa:webupd8team/java' state=present
+    - name: add dead snakes repo
+      apt_repository: repo='ppa:fkrull/deadsnakes' state=present
     - name: update apt cache
       apt: update_cache=yes
     - name: install build-essential
@@ -29,6 +31,8 @@
       with_items:
           - python-pip
           - python-dev
+          - python2.6
+          - python2.6-dev
     - name: install virtualenvwrapper
       pip: name=virtualenvwrapper
     - name: install vim
