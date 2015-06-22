@@ -70,3 +70,6 @@
     - name: clone cassandra-dtest
       git: repo=https://github.com/riptano/cassandra-dtest.git dest=/home/vagrant/cassandra-dtest
       sudo: false
+    - name: clone python-driver
+      git: repo=https://github.com/dkua/python-driver.git dest=/home/vagrant/python-driver
+      sudo: false
