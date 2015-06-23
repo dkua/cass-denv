@@ -22,6 +22,8 @@
       apt: pkg={{ item }} state=latest
       with_items:
         - zsh
+    - name: set shell
+      shell: chsh -s `which zsh` vagrant
     - name: install hg
       apt: pkg={{ item }} state=latest
       with_items:
@@ -92,8 +94,13 @@
           - { python: 'python3.3', venv: 'cass3.3' }
           - { python: 'python3.4', venv: 'cass3.4' }
       sudo: false
-    - name: pip install requirements
+    - name: pip install requirements to all venvs
       shell: >
           executable=/bin/bash
           source `which virtualenvwrapper.sh` && allvirtualenv pip install -r /home/vagrant/requirements.txt
+      sudo: false
+    - name: install dotfiles
+      shell: >
+          executable=/bin/bash
+          cd /home/vagrant/dotfiles && make base
       sudo: false
