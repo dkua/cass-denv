@@ -1,3 +1,5 @@
 export CASSANDRA_DIR="$HOME/cassandra"
+export PATH=$CASSANDRA_DIR:$PATH
+export CQLSH_NO_BUNDLED=true
 alias "cassbuild"="cd $CASSANDRA_DIR; ant build jar; cd -"
 alias "cassdtest"="cd $HOME/cassandra-dtest; nosetests; cd -"
